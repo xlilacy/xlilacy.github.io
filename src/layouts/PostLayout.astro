@@ -3,6 +3,7 @@ import PostImage from '../components/PostImage.astro';
 import ImageGrid from '../components/ImageGrid.astro';
 import PostStats from '../components/PostStats.astro';
 import type { CollectionEntry } from 'astro:content';
+import { Fragment } from 'astro/jsx-runtime';
 
 interface Props {
   post: CollectionEntry<'posts'>;
