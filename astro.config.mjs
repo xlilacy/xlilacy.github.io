@@ -1,9 +1,14 @@
 import { defineConfig } from 'astro/config';
 import { remarkGfm } from 'remark-gfm';
+import mdx from '@astrojs/mdx';
+import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://xlilacy.github.io',
+  base: '/',
+  trailingSlash: 'ignore',
+  integrations: [mdx(), sitemap()],
   markdown: {
     remarkPlugins: [remarkGfm],
     shikiConfig: {
@@ -21,7 +26,7 @@ export default defineConfig({
     },
   },
   build: {
-    assets: 'assets'
+    format: 'directory'
   },
   experimental: {
     viewTransitions: true
