@@ -12,6 +12,7 @@ export default defineConfig({
     remarkPlugins: [remarkGfm],
     shikiConfig: {
       theme: 'github-dark',
+      langs: [],
     },
   },
   image: {
@@ -22,6 +23,13 @@ export default defineConfig({
   vite: {
     build: {
       assetsInlineLimit: 0,
+    },
+    css: {
+      preprocessorOptions: {
+        css: {
+          additionalData: `@import "./src/styles/global.css";`,
+        },
+      },
     },
   },
   build: {
