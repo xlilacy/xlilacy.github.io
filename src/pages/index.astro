@@ -1,79 +1,202 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PostCard from '../components/PostCard.astro';
-import Pagination from '../components/Pagination.astro';
 import { getCollection } from 'astro:content';
 
-const postsPerPage = 5;
 const allPosts = await getCollection('posts', ({ data }) => !data.draft);
-const totalPages = Math.ceil(allPosts.length / postsPerPage);
-
-// Get current page from URL or default to 1
-const currentPage = Number(Astro.url.searchParams.get('page')) || 1;
-const startIndex = (currentPage - 1) * postsPerPage;
-const endIndex = startIndex + postsPerPage;
-const posts = allPosts.slice(startIndex, endIndex).sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+const posts = allPosts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 ---
 
-<BaseLayout title="Home">
-  <main class="container">
-    <h1 class="page-title">Latest Posts</h1>
-    
-    <div class="posts-grid">
-      {posts.map((post) => (
-        <PostCard
-          url={`/posts/${post.slug}`}
-          title={post.data.title}
-          date={post.data.pubDate}
-          description={post.data.description}
-          image={post.data.image?.src}
-          tags={post.data.tags}
-        />
-      ))}
-    </div>
-
-    {totalPages > 1 && (
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        baseUrl="/"
-      />
-    )}
-  </main>
+<BaseLayout title="daydreamer">
+  <div class="posts">
+    {posts.map((post, index) => (
+      <article class={`post ${index % 2 === 0 ? 'odd' : 'even'}`}>
+        <a href={`/posts/${post.slug}`} class="post-link">
+          <h2>{post.data.title}</h2>
+          <div class="meta">
+            <div class="meta-content">
+              <time datetime={post.data.pubDate.toISOString()}>
+                {new Intl.DateTimeFormat('es', { 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                }).format(post.data.pubDate)}
+              </time>
+              {post.data.categories && post.data.categories.length > 0 && (
+                <div class="categories">
+                  {post.data.categories.map(category => (
+                    <a href={`/category/${category.toLowerCase()}`}>{category}</a>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        </a>
+      </article>
+    ))}
+  </div>
 </BaseLayout>
 
 <style>
-  .container {
-    max-width: 1200px;
+  .posts {
+    max-width: var(--content-width);
     margin: 0 auto;
-    padding: 2rem 1rem;
+    padding: var(--spacing-large);
   }
 
-  .page-title {
-    font-size: 2.5rem;
-    margin-bottom: 2rem;
-    text-align: center;
+  .post {
+    background: linear-gradient(135deg, rgba(218, 58, 73, 0.85), rgba(205, 255, 167, 0.85));
+    backdrop-filter: blur(8px);
+    margin-bottom: 1rem;
+    animation: fadeIn 0.6s ease forwards;
+    opacity: 0;
   }
 
-  .posts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  .post:nth-child(odd) {
+    transform: translateX(-10px);
+  }
+
+  .post:nth-child(even) {
+    transform: translateX(10px);
+  }
+
+  .post-link {
+    padding: 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     gap: 2rem;
-    margin-bottom: 2rem;
+  }
+
+  h2 {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-title);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    flex: 1;
+  }
+
+  .post:nth-child(odd) h2 a {
+    color: var(--color-header);
+  }
+
+  .post:nth-child(even) h2 a {
+    color: var(--color-post-accent);
+  }
+
+  .meta {
+    text-align: right;
+    font-size: var(--font-size-meta);
+    flex: 0 0 auto;
+    color: var(--color-text);
+    font-weight: 700;
+    align-self: center;
+    margin-left: 2rem;
+  }
+
+  .meta-content {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  time {
+    font-family: var(--font-title);
+    font-size: 0.9rem;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .post:nth-child(odd) .meta time {
+    color: var(--color-header);
+  }
+
+  .post:nth-child(even) .meta time {
+    color: var(--color-title);
+  }
+
+  .categories {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.3rem;
+  }
+
+  .categories a {
+    display: inline-block;
+    color: var(--color-text);
+    font-family: var(--font-title);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.2s ease;
+    line-height: 1;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+  }
+
+  .categories a:hover {
+    color: var(--color-header);
+    text-decoration: none;
+    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.95);
+  }
+
+  /* Stagger the animations for each post */
+  .post:nth-child(1) { animation-delay: 0.1s; }
+  .post:nth-child(2) { animation-delay: 0.2s; }
+  .post:nth-child(3) { animation-delay: 0.3s; }
+  .post:nth-child(4) { animation-delay: 0.4s; }
+  .post:nth-child(5) { animation-delay: 0.5s; }
+  .post:nth-child(6) { animation-delay: 0.6s; }
+  .post:nth-child(7) { animation-delay: 0.7s; }
+  .post:nth-child(8) { animation-delay: 0.8s; }
+  .post:nth-child(9) { animation-delay: 0.9s; }
+  .post:nth-child(10) { animation-delay: 1s; }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   @media (max-width: 768px) {
-    .container {
-      padding: 1rem;
+    .posts {
+      padding: var(--spacing-base);
     }
 
-    .page-title {
-      font-size: 2rem;
+    .post-link {
+      flex-direction: column;
+      gap: 1rem;
     }
 
-    .posts-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
+    .meta {
+      width: 100%;
+      align-items: flex-start;
+      margin-left: 0;
+    }
+
+    .meta-content {
+      align-items: flex-start;
+    }
+
+    .categories {
+      justify-content: flex-start;
+    }
+
+    .post:nth-child(odd),
+    .post:nth-child(even) {
+      transform: none;
     }
   }
 </style> 

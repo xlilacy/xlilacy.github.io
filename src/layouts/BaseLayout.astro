@@ -42,4 +42,77 @@ const {
     <Animations />
     <Snow />
   </body>
-</html> 
+</html>
+
+<style>
+  /* Base layout */
+  body {
+    margin: 0;
+    font-family: var(--font-primary);
+    font-weight: 600;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    color: var(--color-text);
+    
+    /* Layered background */
+    background: 
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.2)),
+      linear-gradient(to bottom, rgba(17, 17, 17, 0.1), rgba(17, 17, 17, 0.4)), 
+      var(--color-background);
+    background-image: 
+      url('/images/bg.png'),
+      url('https://i.ibb.co/39K7K1T1/bg.png');
+    background-repeat: repeat;
+    background-size: 400px auto;
+  }
+
+  /* Content wrapper z-indexing */
+  header, main, footer {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Header styles */
+  header {
+    padding: var(--spacing-large);
+    text-align: center;
+    background-color: var(--color-header);
+  }
+
+  header h1 {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: var(--font-size-heading);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    text-transform: lowercase;
+  }
+
+  header h1 a {
+    color: var(--color-title);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  header h1 a:hover {
+    color: var(--color-border);
+  }
+
+  main {
+    flex: 1;
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    header {
+      padding: var(--spacing-base);
+    }
+
+    header h1 {
+      font-size: calc(var(--font-size-heading) * 0.8);
+    }
+  }
+</style> 
