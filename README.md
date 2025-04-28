@@ -2,6 +2,8 @@
 
 A minimalist blog built with Astro.
 
+[![Deploy to GitHub Pages](https://github.com/xlilacy/xlilacy.github.io/actions/workflows/deploy.yml/badge.svg)](https://github.com/xlilacy/xlilacy.github.io/actions/workflows/deploy.yml)
+
 ## Features
 
 - Clean, minimalist design
