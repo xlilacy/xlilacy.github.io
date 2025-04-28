@@ -26,8 +26,5 @@ export default defineConfig({
   },
   build: {
     format: 'directory'
-  },
-  experimental: {
-    viewTransitions: true
   }
 }); 
