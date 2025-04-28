@@ -1,0 +1,44 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  caption?: string;
+  resized?: boolean;
+}
+
+const { src, alt, caption, resized } = Astro.props;
+---
+
+<figure class={`post-image ${resized ? 'resized' : ''}`}>
+  <img src={src} alt={alt} />
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .post-image {
+    margin: 2rem 0;
+    text-align: center;
+  }
+
+  .post-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  .post-image.resized img {
+    max-width: 50%;
+  }
+
+  .post-image figcaption {
+    margin-top: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 768px) {
+    .post-image.resized img {
+      max-width: 100%;
+    }
+  }
+</style> 

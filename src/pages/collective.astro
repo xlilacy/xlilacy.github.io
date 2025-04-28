@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="Writing Collective" 
+  description="Join our writing collective and share your stories"
+>
+  <article class="collective">
+    <h1>Writing Collective</h1>
+    
+    <div class="collective-content">
+      <p>
+        Welcome to our writing collective! This is a space where writers come together to share their stories, 
+        support each other, and grow as artists. Whether you're a seasoned writer or just starting out, 
+        you're welcome here.
+      </p>
+
+      <h2>What We Do</h2>
+      <ul>
+        <li>Share and discuss our writing</li>
+        <li>Provide constructive feedback</li>
+        <li>Collaborate on projects</li>
+        <li>Learn from each other</li>
+      </ul>
+
+      <h2>How to Join</h2>
+      <p>
+        To join our collective, simply reach out to us through our contact form or social media channels. 
+        We're always looking for new voices and perspectives to add to our community.
+      </p>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .collective {
+    max-width: var(--content-width);
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    margin: 0 0 2rem;
+    text-align: center;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    margin: 2rem 0 1rem;
+  }
+
+  .collective-content {
+    line-height: 1.8;
+  }
+
+  .collective-content p {
+    margin: 1.5rem 0;
+  }
+
+  .collective-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+  }
+
+  .collective-content ul li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin: 0.5rem 0;
+  }
+
+  .collective-content ul li::before {
+    content: '🍓';
+    position: absolute;
+    left: 0;
+  }
+</style> 

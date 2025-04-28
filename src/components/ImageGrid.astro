@@ -1,0 +1,62 @@
+---
+interface Props {
+  images: Array<{
+    src: string;
+    alt: string;
+    caption?: string;
+    resized?: boolean;
+  }>;
+  columns?: number;
+}
+
+const { images, columns = 2 } = Astro.props;
+---
+
+<div class="image-grid" style={`--columns: ${columns}`}>
+  {images.map((image) => (
+    <figure class={`grid-item ${image.resized ? 'resized' : ''}`}>
+      <img src={image.src} alt={image.alt} />
+      {image.caption && <figcaption>{image.caption}</figcaption>}
+    </figure>
+  ))}
+</div>
+
+<style>
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--columns), 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .grid-item {
+    margin: 0;
+    text-align: center;
+  }
+
+  .grid-item img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  .grid-item.resized img {
+    max-width: 50%;
+  }
+
+  .grid-item figcaption {
+    margin-top: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 768px) {
+    .image-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .grid-item.resized img {
+      max-width: 100%;
+    }
+  }
+</style> 

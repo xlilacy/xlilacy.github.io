@@ -1,0 +1,48 @@
+---
+interface Props {
+  stats: {
+    wordCount: number;
+    readingTime: number;
+  };
+}
+
+const { stats } = Astro.props;
+---
+
+<div class="post-stats">
+  <span class="stat">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+      <circle cx="12" cy="12" r="3"/>
+    </svg>
+    {stats.wordCount} words
+  </span>
+  <span class="stat">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <polyline points="12 6 12 12 16 14"/>
+    </svg>
+    {stats.readingTime} min read
+  </span>
+</div>
+
+<style>
+  .post-stats {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 1rem 0;
+  }
+
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .stat svg {
+    opacity: 0.7;
+  }
+</style> 

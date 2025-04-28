@@ -1,0 +1,141 @@
+<script>
+  function initializeAnimations() {
+    // Smooth reveal for posts as they enter viewport
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '50px'
+    });
+
+    // Observe all posts and tag posts
+    document.querySelectorAll('.post, .tag-post').forEach(post => {
+      observer.observe(post);
+    });
+
+    // Smooth scroll for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Add hover effect for posts
+    document.querySelectorAll('.post, .tag-post').forEach(post => {
+      post.addEventListener('mouseenter', function() {
+        this.style.transform = 'scale(1.01)';
+        this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      });
+
+      post.addEventListener('mouseleave', function() {
+        this.style.transform = 'scale(1)';
+      });
+    });
+
+    // Add parallax effect to background elements
+    let ticking = false;
+    let lastScrollY = window.scrollY;
+    let animationFrame;
+
+    window.addEventListener('scroll', () => {
+      lastScrollY = window.scrollY;
+      if (!ticking) {
+        animationFrame = window.requestAnimationFrame(() => {
+          document.querySelectorAll('.post, .tag-post').forEach((post, index) => {
+            const speed = 1 + (index % 2) * 0.1;
+            const transform = `translateY(${lastScrollY * speed * 0.02}px)`;
+            post.style.transform = post.style.transform.includes('scale') 
+              ? `${transform} scale(1.01)` 
+              : transform;
+          });
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+
+    // Cleanup function for view transitions
+    return () => {
+      observer.disconnect();
+      window.cancelAnimationFrame(animationFrame);
+    };
+  }
+
+  // Initialize animations on page load and after view transitions
+  document.addEventListener('astro:page-load', () => {
+    const cleanup = initializeAnimations();
+    document.addEventListener('astro:before-preparation', cleanup);
+  });
+</script>
+
+<style is:global>
+  /* Base styles for post animations */
+  .post,
+  .tag-post {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    will-change: transform, opacity;
+  }
+
+  .post.visible,
+  .tag-post.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Stagger animations for posts */
+  .post:nth-child(1), .tag-post:nth-child(1) { transition-delay: 0.1s; }
+  .post:nth-child(2), .tag-post:nth-child(2) { transition-delay: 0.2s; }
+  .post:nth-child(3), .tag-post:nth-child(3) { transition-delay: 0.3s; }
+  .post:nth-child(4), .tag-post:nth-child(4) { transition-delay: 0.4s; }
+  .post:nth-child(5), .tag-post:nth-child(5) { transition-delay: 0.5s; }
+  .post:nth-child(6), .tag-post:nth-child(6) { transition-delay: 0.6s; }
+  .post:nth-child(7), .tag-post:nth-child(7) { transition-delay: 0.7s; }
+  .post:nth-child(8), .tag-post:nth-child(8) { transition-delay: 0.8s; }
+  .post:nth-child(9), .tag-post:nth-child(9) { transition-delay: 0.9s; }
+  .post:nth-child(10), .tag-post:nth-child(10) { transition-delay: 1s; }
+
+  /* Post content animations */
+  .post-content > * {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeSlideIn 0.5s ease forwards;
+  }
+
+  @keyframes fadeSlideIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .post-content > *:nth-child(1) { animation-delay: 0.1s; }
+  .post-content > *:nth-child(2) { animation-delay: 0.3s; }
+  .post-content > *:nth-child(3) { animation-delay: 0.5s; }
+  .post-content > *:nth-child(4) { animation-delay: 0.7s; }
+  .post-content > *:nth-child(5) { animation-delay: 0.9s; }
+  .post-content > *:nth-child(6) { animation-delay: 1.1s; }
+  .post-content > *:nth-child(7) { animation-delay: 1.3s; }
+  .post-content > *:nth-child(8) { animation-delay: 1.5s; }
+  .post-content > *:nth-child(9) { animation-delay: 1.7s; }
+  .post-content > *:nth-child(10) { animation-delay: 1.9s; }
+
+  /* Ensure transforms don't conflict */
+  .post, .tag-post {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+</style> 

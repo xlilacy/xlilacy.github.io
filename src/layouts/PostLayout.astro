@@ -1,0 +1,182 @@
+import BaseLayout from './BaseLayout.astro';
+import PostImage from '../components/PostImage.astro';
+import ImageGrid from '../components/ImageGrid.astro';
+import PostStats from '../components/PostStats.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">{post.data.title}</h1>
+      <div class="post-meta">
+        <time datetime={post.data.pubDate.toISOString()}>
+          {post.data.pubDate.toLocaleDateString('es', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })}
+        </time>
+        {post.data.categories && (
+          <div class="post-categories">
+            {post.data.categories.map((category) => (
+              <a href={`/tag/${category}`} class="category">{category}</a>
+            ))}
+          </div>
+        )}
+      </div>
+      {post.data.stats && <PostStats stats={post.data.stats} />}
+    </header>
+
+    <div class="post-content">
+      <Content />
+    </div>
+
+    {post.data.image && (
+      <PostImage
+        src={post.data.image.src}
+        alt={post.data.image.alt}
+        caption={post.data.image.caption}
+        resized={post.data.image.resized}
+      />
+    )}
+
+    {post.data.imageGrid && (
+      <ImageGrid
+        images={post.data.imageGrid.images}
+        columns={post.data.imageGrid.columns}
+      />
+    )}
+  </article>
+</BaseLayout>
+
+<style>
+  .post {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .post-header {
+    margin-bottom: 2rem;
+  }
+
+  .post-title {
+    font-size: 2.5rem;
+    margin: 0 0 1rem;
+    line-height: 1.2;
+  }
+
+  .post-meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+
+  .post-categories {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .category {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .category:hover {
+    color: var(--text-primary);
+  }
+
+  .post-content {
+    line-height: 1.8;
+  }
+
+  .post-content p {
+    margin: 1.5rem 0;
+  }
+
+  .post-content h2 {
+    font-size: 1.8rem;
+    margin: 2rem 0 1rem;
+  }
+
+  .post-content h3 {
+    font-size: 1.5rem;
+    margin: 1.5rem 0 1rem;
+  }
+
+  .post-content ul,
+  .post-content ol {
+    margin: 1.5rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .post-content li {
+    margin: 0.5rem 0;
+  }
+
+  .post-content blockquote {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    border-left: 4px solid var(--text-secondary);
+    background: var(--bg-secondary);
+  }
+
+  .post-content blockquote p {
+    margin: 0;
+  }
+
+  .post-content code {
+    background: var(--bg-secondary);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+
+  .post-content pre {
+    background: var(--bg-secondary);
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+  }
+
+  .post-content pre code {
+    background: none;
+    padding: 0;
+  }
+
+  .post-content a {
+    color: var(--text-primary);
+    text-decoration: underline;
+    transition: color 0.2s;
+  }
+
+  .post-content a:hover {
+    color: var(--text-secondary);
+  }
+
+  @media (max-width: 768px) {
+    .post {
+      padding: 1rem;
+    }
+
+    .post-title {
+      font-size: 2rem;
+    }
+
+    .post-meta {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style> 

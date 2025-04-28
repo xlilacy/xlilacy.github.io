@@ -1,0 +1,121 @@
+---
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  baseUrl: string;
+}
+
+const { currentPage, totalPages, baseUrl } = Astro.props;
+
+const getPageUrl = (page: number) => {
+  if (page === 1) return baseUrl;
+  return `${baseUrl}/page/${page}`;
+};
+
+const getPageNumbers = () => {
+  const pages = [];
+  const maxVisiblePages = 5;
+  let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+  let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+  if (endPage - startPage + 1 < maxVisiblePages) {
+    startPage = Math.max(1, endPage - maxVisiblePages + 1);
+  }
+
+  for (let i = startPage; i <= endPage; i++) {
+    pages.push(i);
+  }
+
+  return pages;
+};
+---
+
+<nav class="pagination" aria-label="Pagination">
+  {currentPage > 1 && (
+    <a href={getPageUrl(currentPage - 1)} class="pagination-link prev" aria-label="Previous page">
+      ←
+    </a>
+  )}
+
+  <div class="pagination-numbers">
+    {getPageNumbers().map((page) => (
+      <a
+        href={getPageUrl(page)}
+        class={`pagination-link ${page === currentPage ? 'active' : ''}`}
+        aria-label={`Page ${page}`}
+        aria-current={page === currentPage ? 'page' : undefined}
+      >
+        {page}
+      </a>
+    ))}
+  </div>
+
+  {currentPage < totalPages && (
+    <a href={getPageUrl(currentPage + 1)} class="pagination-link next" aria-label="Next page">
+      →
+    </a>
+  )}
+</nav>
+
+<style>
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 2rem 0;
+  }
+
+  .pagination-numbers {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .pagination-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding: 0 0.5rem;
+    border-radius: 4px;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .pagination-link:hover {
+    background: var(--bg-secondary);
+  }
+
+  .pagination-link.active {
+    background: var(--text-primary);
+    color: var(--bg-primary);
+  }
+
+  .pagination-link.prev,
+  .pagination-link.next {
+    font-size: 1.2rem;
+  }
+
+  @media (max-width: 768px) {
+    .pagination {
+      flex-wrap: wrap;
+    }
+
+    .pagination-numbers {
+      order: 1;
+      width: 100%;
+      justify-content: center;
+      margin: 0.5rem 0;
+    }
+
+    .pagination-link.prev {
+      order: 0;
+    }
+
+    .pagination-link.next {
+      order: 2;
+    }
+  }
+</style> 

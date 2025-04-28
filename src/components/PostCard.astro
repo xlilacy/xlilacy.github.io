@@ -1,0 +1,91 @@
+---
+interface Props {
+  url: string;
+  title: string;
+  date: Date;
+  description?: string;
+  image?: string;
+  tags?: string[];
+}
+
+const { url, title, date, description, image, tags } = Astro.props;
+---
+
+<article class="post">
+  <a href={url} class="post-link">
+    {image && <img src={image} alt={title} class="post-image" />}
+    <div class="post-content">
+      <h2 class="post-title">{title}</h2>
+      <time class="post-date" datetime={date.toISOString()}>
+        {new Intl.DateTimeFormat('es', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        }).format(date)}
+      </time>
+      {description && <p class="post-description">{description}</p>}
+      {tags && tags.length > 0 && (
+        <div class="post-tags">
+          {tags.map(tag => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+      )}
+    </div>
+  </a>
+</article>
+
+<style>
+  .post {
+    margin-bottom: 2rem;
+    transition: transform 0.3s ease;
+  }
+
+  .post-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .post-image {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+
+  .post-content {
+    padding: 1rem;
+  }
+
+  .post-title {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+  }
+
+  .post-date {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .post-description {
+    margin: 0.5rem 0;
+    color: var(--text-muted);
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .tag {
+    background: var(--bg-accent);
+    padding: 0.25rem 0.5rem;
+    border-radius: 2px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+</style> 
