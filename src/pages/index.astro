@@ -21,7 +21,14 @@ const posts = allPosts.slice(startIndex, endIndex).sort((a, b) => b.data.pubDate
     
     <div class="posts-grid">
       {posts.map((post) => (
-        <PostCard post={post} />
+        <PostCard
+          url={`/posts/${post.slug}`}
+          title={post.data.title}
+          date={post.data.pubDate}
+          description={post.data.description}
+          image={post.data.image?.src}
+          tags={post.data.tags}
+        />
       ))}
     </div>
 

@@ -1,3 +1,4 @@
+---
 import BaseLayout from './BaseLayout.astro';
 import PostImage from '../components/PostImage.astro';
 import ImageGrid from '../components/ImageGrid.astro';
@@ -10,8 +11,9 @@ interface Props {
 
 const { post } = Astro.props;
 const { Content } = await post.render();
+---
 
-<BaseLayout title={post.data.title} description={post.data.description}>
+<BaseLayout title={post.data.title} description={post.data.description} image={post.data.image?.src}>
   <article class="post">
     <header class="post-header">
       <h1 class="post-title">{post.data.title}</h1>
@@ -26,17 +28,20 @@ const { Content } = await post.render();
         {post.data.categories && (
           <div class="post-categories">
             {post.data.categories.map((category) => (
-              <a href={`/tag/${category}`} class="category">{category}</a>
+              <a href={`/category/${category}`} class="category">{category}</a>
+            ))}
+          </div>
+        )}
+        {post.data.tags && (
+          <div class="post-tags">
+            {post.data.tags.map((tag) => (
+              <a href={`/tag/${tag}`} class="tag">{tag}</a>
             ))}
           </div>
         )}
       </div>
       {post.data.stats && <PostStats stats={post.data.stats} />}
     </header>
-
-    <div class="post-content">
-      <Content />
-    </div>
 
     {post.data.image && (
       <PostImage
@@ -46,6 +51,10 @@ const { Content } = await post.render();
         resized={post.data.image.resized}
       />
     )}
+
+    <div class="post-content">
+      <Content />
+    </div>
 
     {post.data.imageGrid && (
       <ImageGrid
@@ -77,92 +86,108 @@ const { Content } = await post.render();
     display: flex;
     gap: 1rem;
     align-items: center;
-    color: var(--text-secondary);
+    flex-wrap: wrap;
+    color: var(--text-muted);
     font-size: 0.9rem;
   }
 
-  .post-categories {
+  .post-categories,
+  .post-tags {
     display: flex;
     gap: 0.5rem;
+    flex-wrap: wrap;
   }
 
-  .category {
-    color: var(--text-secondary);
+  .category,
+  .tag {
+    padding: 0.25rem 0.5rem;
+    border-radius: 2px;
     text-decoration: none;
     transition: color 0.2s;
   }
 
-  .category:hover {
-    color: var(--text-primary);
+  .category {
+    background: var(--primary);
+    color: white;
+  }
+
+  .tag {
+    background: var(--bg-accent);
+    color: var(--text-muted);
+  }
+
+  .category:hover,
+  .tag:hover {
+    opacity: 0.8;
   }
 
   .post-content {
     line-height: 1.8;
   }
 
-  .post-content p {
+  .post-content :global(p) {
     margin: 1.5rem 0;
   }
 
-  .post-content h2 {
+  .post-content :global(h2) {
     font-size: 1.8rem;
     margin: 2rem 0 1rem;
   }
 
-  .post-content h3 {
+  .post-content :global(h3) {
     font-size: 1.5rem;
     margin: 1.5rem 0 1rem;
   }
 
-  .post-content ul,
-  .post-content ol {
+  .post-content :global(ul),
+  .post-content :global(ol) {
     margin: 1.5rem 0;
     padding-left: 1.5rem;
   }
 
-  .post-content li {
+  .post-content :global(li) {
     margin: 0.5rem 0;
   }
 
-  .post-content blockquote {
+  .post-content :global(blockquote) {
     margin: 1.5rem 0;
     padding: 1rem;
-    border-left: 4px solid var(--text-secondary);
-    background: var(--bg-secondary);
+    border-left: 4px solid var(--primary);
+    background: var(--bg-accent);
   }
 
-  .post-content blockquote p {
+  .post-content :global(blockquote p) {
     margin: 0;
   }
 
-  .post-content code {
-    background: var(--bg-secondary);
+  .post-content :global(code) {
+    background: var(--bg-accent);
     padding: 0.2rem 0.4rem;
     border-radius: 4px;
     font-size: 0.9em;
   }
 
-  .post-content pre {
-    background: var(--bg-secondary);
+  .post-content :global(pre) {
+    background: var(--bg-accent);
     padding: 1rem;
     border-radius: 4px;
     overflow-x: auto;
     margin: 1.5rem 0;
   }
 
-  .post-content pre code {
+  .post-content :global(pre code) {
     background: none;
     padding: 0;
   }
 
-  .post-content a {
-    color: var(--text-primary);
+  .post-content :global(a) {
+    color: var(--primary);
     text-decoration: underline;
     transition: color 0.2s;
   }
 
-  .post-content a:hover {
-    color: var(--text-secondary);
+  .post-content :global(a:hover) {
+    opacity: 0.8;
   }
 
   @media (max-width: 768px) {

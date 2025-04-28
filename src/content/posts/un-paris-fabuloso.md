@@ -4,7 +4,7 @@ pubDate: 2024-03-20
 description: "Un viaje mágico por las calles de París"
 author: "xlilacy"
 image:
-  url: "/images/posts/paris.jpg"
+  src: "/images/posts/paris.jpg"
   alt: "Vista de París desde arriba"
 categories: ["viajes", "europa"]
 tags: ["paris", "francia", "viajes"]

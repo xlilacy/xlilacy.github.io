@@ -1,135 +1,16 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import PostImage from '../../components/PostImage.astro';
-import ImageGrid from '../../components/ImageGrid.astro';
+import PostLayout from '../../layouts/PostLayout.astro';
 import { getCollection } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
 
-const { slug } = Astro.params;
-const post = (await getCollection('posts')).find(post => post.slug === slug);
-
-if (!post) {
-  return Astro.redirect('/404');
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
 }
 
-const { Content } = await post.render();
+const { post } = Astro.props;
 ---
 
-<BaseLayout 
-  title={post.data.title} 
-  description={post.data.description}
-  image={post.data.image?.src}
->
-  <article class="post">
-    <header class="post-header">
-      <h1>{post.data.title}</h1>
-      <div class="post-meta">
-        <time datetime={post.data.date.toISOString()}>
-          {new Intl.DateTimeFormat('es', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-          }).format(post.data.date)}
-        </time>
-        {post.data.tags && post.data.tags.length > 0 && (
-          <div class="post-tags">
-            {post.data.tags.map(tag => (
-              <a href={`/tags/${tag}`} class="tag">{tag}</a>
-            ))}
-          </div>
-        )}
-      </div>
-    </header>
-
-    <div class="post-content">
-      <Content 
-        components={{
-          img: ({ src, alt, title }) => (
-            <PostImage 
-              src={src} 
-              alt={alt} 
-              caption={title}
-            />
-          )
-        }}
-      />
-    </div>
-  </article>
-</BaseLayout>
-
-<style>
-  .post {
-    max-width: var(--content-width);
-    margin: 0 auto;
-  }
-
-  .post-header {
-    margin-bottom: 2rem;
-    text-align: center;
-  }
-
-  .post-header h1 {
-    font-family: var(--font-display);
-    font-size: 2.5rem;
-    margin: 0 0 1rem;
-  }
-
-  .post-meta {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-  }
-
-  .post-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    justify-content: center;
-    margin-top: 1rem;
-  }
-
-  .tag {
-    background: var(--bg-accent);
-    padding: 0.25rem 0.5rem;
-    border-radius: 2px;
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-
-  .tag:hover {
-    color: var(--primary);
-  }
-
-  .post-content {
-    line-height: 1.8;
-  }
-
-  .post-content :global(p) {
-    margin: 1.5rem 0;
-  }
-
-  .post-content :global(blockquote) {
-    border-left: 4px solid var(--primary);
-    margin: 1.5rem 0;
-    padding: 0.5rem 0 0.5rem 1rem;
-    color: var(--text-muted);
-  }
-
-  .post-content :global(ul) {
-    list-style: none;
-    padding: 0;
-    margin: 1.5rem 0;
-  }
-
-  .post-content :global(ul li) {
-    position: relative;
-    padding-left: 1.5rem;
-    margin: 0.5rem 0;
-  }
-
-  .post-content :global(ul li::before) {
-    content: '🍓';
-    position: absolute;
-    left: 0;
-  }
-</style> 
+<PostLayout post={post} /> 

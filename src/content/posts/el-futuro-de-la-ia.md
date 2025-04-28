@@ -4,7 +4,7 @@ pubDate: 2024-03-15
 description: "Explorando las posibilidades y desafíos de la inteligencia artificial"
 author: "xlilacy"
 image:
-  url: "/images/posts/ai.jpg"
+  src: "/images/posts/ai.jpg"
   alt: "Representación visual de inteligencia artificial"
 categories: ["tecnología", "ia"]
 tags: ["inteligencia artificial", "futuro", "tecnología"]

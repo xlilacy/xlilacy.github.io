@@ -4,7 +4,7 @@ pubDate: 2024-03-10
 description: "Un viaje a través de las páginas que nos transforman"
 author: "xlilacy"
 image:
-  url: "/images/posts/books.jpg"
+  src: "/images/posts/books.jpg"
   alt: "Estantería llena de libros antiguos"
 categories: ["literatura", "reflexiones"]
 tags: ["libros", "lectura", "literatura"]

@@ -8,8 +8,11 @@ const posts = defineCollection({
     pubDate: z.date(),
     updated: z.date().optional(),
     draft: z.boolean().default(false),
+    author: z.string().default('xlilacy'),
     categories: z.array(z.string()),
+    tags: z.array(z.string()).optional(),
     stats: z.object({
+      number: z.number().optional(),
       wordCount: z.number(),
       readingTime: z.number()
     }).optional(),

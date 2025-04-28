@@ -4,39 +4,50 @@ import { getCollection } from 'astro:content';
 import PostCard from '../../components/PostCard.astro';
 import Pagination from '../../components/Pagination.astro';
 
-const postsPerPage = 6;
-
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
-  const uniqueTags = [...new Set(posts.map((post) => post.data.tags).flat())];
+  const uniqueTags = [...new Set(posts
+    .filter(post => post.data.tags)
+    .map((post) => post.data.tags)
+    .flat()
+  )];
   
   return uniqueTags.map((tag) => {
-    const filteredPosts = posts.filter((post) => 
-      post.data.tags.includes(tag)
-    ).sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+    const filteredPosts = posts
+      .filter((post) => post.data.tags?.includes(tag))
+      .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
     
     return {
       params: { tag },
-      props: { posts: filteredPosts, tag },
+      props: { posts: filteredPosts },
     };
   });
 }
 
 const { tag } = Astro.params;
-const { posts: allPosts } = Astro.props;
+const { posts } = Astro.props;
 
-const currentPage = Number(Astro.url.searchParams.get('page') || 1);
-const totalPages = Math.ceil(allPosts.length / postsPerPage);
-const startIndex = (currentPage - 1) * postsPerPage;
-const posts = allPosts.slice(startIndex, startIndex + postsPerPage);
+const pageSize = 6;
+const currentPage = 1;
+const totalPages = Math.ceil(posts.length / pageSize);
+const start = (currentPage - 1) * pageSize;
+const end = start + pageSize;
+const currentPosts = posts.slice(start, end);
 ---
 
 <BaseLayout title={`Posts tagged with "${tag}"`}>
   <main class="container">
     <h1 class="page-title">Posts tagged with "{tag}"</h1>
     <div class="posts-grid">
-      {posts.map((post) => (
-        <PostCard post={post} />
+      {currentPosts.map((post) => (
+        <PostCard
+          url={`/posts/${post.slug}`}
+          title={post.data.title}
+          date={post.data.pubDate}
+          description={post.data.description}
+          image={post.data.image?.src}
+          tags={post.data.tags}
+        />
       ))}
     </div>
     
