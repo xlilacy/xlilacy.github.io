@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config';
-import { remarkGfm } from 'remark-gfm';
+import remarkGfm from 'remark-gfm';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
